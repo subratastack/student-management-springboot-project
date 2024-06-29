@@ -49,7 +49,7 @@ public class StudentController {
     }
 
     @PutMapping(STUDENT_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("studentId") UUID studentId,
+    public ResponseEntity updateStudentById(@PathVariable("studentId") UUID studentId,
                                      @Validated @RequestBody StudentDTO studentDTO) {
 
         if (studentService.updateStudentById(studentId, studentDTO).isEmpty()) {
@@ -57,5 +57,14 @@ public class StudentController {
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping(STUDENT_PATH_ID)
+    public ResponseEntity deleteStudentById(@PathVariable("studentId") UUID studentId) {
+        if (studentService.deleteStudentById(studentId)) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+
+        throw new NotFoundException();
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +20,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class StudentServiceImplTest {
 
     @Autowired
@@ -185,6 +187,32 @@ class StudentServiceImplTest {
         Optional<StudentDTO> updatedStudent = studentServiceImpl.updateStudentById(STUDENT_ID, studentDTO);
 
         assertTrue(updatedStudent.isEmpty());
+    }
+
+    @Test
+    void deleteStudentByIdTest() {
+        UUID studentId = UUID.randomUUID();
+
+        doNothing().when(studentRepository).deleteById(studentId);
+        when(studentRepository.existsById(studentId)).thenReturn(true);
+
+        boolean result = studentServiceImpl.deleteStudentById(studentId);
+
+        assertTrue(result);
+
+        verify(studentRepository, times(1)).deleteById(studentId);
+    }
+
+    @Test
+    void deleteStudentByIdNotFoundTest() {
+
+        UUID studentId = UUID.randomUUID();
+
+        when(studentRepository.existsById(studentId)).thenReturn(false);
+        boolean result = studentServiceImpl.deleteStudentById(studentId);
+
+        assertFalse(result);
+        verify(studentRepository, never()).deleteById(studentId);
     }
 
 }

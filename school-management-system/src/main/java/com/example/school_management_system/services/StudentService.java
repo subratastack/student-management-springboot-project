@@ -12,4 +12,5 @@ public interface StudentService {
     Optional<StudentDTO> getStudentById(UUID id);
     List<StudentDTO> getAllStudents();
     Optional<StudentDTO> updateStudentById(UUID id, StudentDTO dto);
+    Boolean deleteStudentById(UUID studentId);
 }

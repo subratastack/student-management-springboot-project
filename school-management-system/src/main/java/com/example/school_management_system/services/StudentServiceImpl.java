@@ -61,4 +61,14 @@ public class StudentServiceImpl implements StudentService {
 
         return atomicReference.get();
     }
+
+    @Override
+    public Boolean deleteStudentById(UUID studentId) {
+        if (studentRepository.existsById(studentId)) {
+            studentRepository.deleteById(studentId);
+            return true;
+        }
+
+        return false;
+    }
 }

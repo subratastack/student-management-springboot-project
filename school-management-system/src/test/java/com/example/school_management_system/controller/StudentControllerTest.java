@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class StudentControllerTest {
 
     @Autowired
@@ -112,7 +114,7 @@ class StudentControllerTest {
         final String NAME = "UPDATED_STUDENT";
         studentDTO.setName(NAME);
 
-        ResponseEntity responseEntity = studentController.updateById(studentDTO.getStudentId(), studentDTO);
+        ResponseEntity responseEntity = studentController.updateStudentById(studentDTO.getStudentId(), studentDTO);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
@@ -127,7 +129,26 @@ class StudentControllerTest {
         studentDTO.setStudentId(UUID.randomUUID());
 
         assertThrows(NotFoundException.class, () -> {
-            studentController.updateById(studentDTO.getStudentId(), studentDTO);
+            studentController.updateStudentById(studentDTO.getStudentId(), studentDTO);
+        });
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteStudentById() {
+        long count = studentRepository.count();
+        Student student = studentRepository.findAll().getFirst();
+        ResponseEntity responseEntity = studentController.deleteStudentById(student.getStudentId());
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(studentRepository.count()).isEqualTo(count - 1);
+    }
+
+    @Test
+    void testDeleteByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+           studentController.deleteStudentById(UUID.randomUUID());
         });
     }
 
