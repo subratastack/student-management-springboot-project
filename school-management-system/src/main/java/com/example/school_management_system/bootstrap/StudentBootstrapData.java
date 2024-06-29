@@ -21,13 +21,15 @@ public class StudentBootstrapData implements CommandLineRunner {
     private static final Integer NO_OF_RECORDS;
 
     static {
-        NO_OF_RECORDS = 50;
+        NO_OF_RECORDS = 20;
         FAKER = Faker.instance(Locale.US);
     }
 
     @Override
     public void run(String... args) throws Exception {
-        // generateStudent();
+        for (int i = 0; i < NO_OF_RECORDS; i++) {
+            generateStudent();
+        }
     }
 
     private void generateStudent() {
@@ -44,7 +46,7 @@ public class StudentBootstrapData implements CommandLineRunner {
         Student student = Student.builder()
                 .name(NAME)
                 .dob(DOB)
-                .email(NAME.split(" ")[0] + "@email.com")
+                .email(FAKER.name().username() + "@email.com")
                 .gender(FAKER.demographic().sex())
                 .parentName(FAKER.name().fullName())
                 .address(ADDRESS)

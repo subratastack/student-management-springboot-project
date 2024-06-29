@@ -48,4 +48,9 @@ class StudentRepositoryTest {
         });
     }
 
+    @Test
+    void studentPastDateDobValidationTest() {
+
+    }
+
 }
