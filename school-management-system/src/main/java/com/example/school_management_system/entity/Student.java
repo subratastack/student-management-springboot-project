@@ -1,9 +1,6 @@
 package com.example.school_management_system.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,10 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table
 public class Student extends Person {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID studentId;
     private String parentName;
 }

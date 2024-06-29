@@ -45,11 +45,11 @@ class StudentServiceImplTest {
     public void testGetAllStudents() {
 
         StudentDTO studentDto1 = StudentDTO.builder()
-                .studentId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .name("StudentTest1")
                 .build();
         StudentDTO studentDto2 = StudentDTO.builder()
-                .studentId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .name("StudentTest2")
                 .build();
 
@@ -68,9 +68,9 @@ class StudentServiceImplTest {
         List<StudentDTO> results =  studentServiceImpl.getAllStudents();
 
         assertEquals(mockStudents.size(), results.size());
-        assertEquals(mockStudents.get(0).getStudentId(), results.get(0).getStudentId());
+        assertEquals(mockStudents.get(0).getId(), results.get(0).getId());
         assertEquals(mockStudents.get(0).getName(), results.get(0).getName());
-        assertEquals(mockStudents.get(1).getStudentId(), results.get(1).getStudentId());
+        assertEquals(mockStudents.get(1).getId(), results.get(1).getId());
         assertEquals(mockStudents.get(1).getName(), results.get(1).getName());
     }
 
@@ -79,7 +79,7 @@ class StudentServiceImplTest {
 
         UUID STUDENT_ID = UUID.randomUUID();
         StudentDTO studentDto1 = StudentDTO.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name("StudentTest1")
                 .build();
 
@@ -91,7 +91,7 @@ class StudentServiceImplTest {
         Optional<StudentDTO> result = studentServiceImpl.getStudentById(STUDENT_ID);
 
         assertEquals(result.get(), studentDto1);
-        assertEquals(result.get().getStudentId(), studentDto1.getStudentId());
+        assertEquals(result.get().getId(), studentDto1.getId());
     }
 
     @Test
@@ -114,12 +114,12 @@ class StudentServiceImplTest {
         UUID STUDENT_ID = UUID.randomUUID();
         String studentName = "Student1";
         StudentDTO studentDTO = StudentDTO.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName)
                 .build();
 
         Student student = Student.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName)
                 .build();
 
@@ -127,7 +127,7 @@ class StudentServiceImplTest {
         when(studentMapper.studentToStudentDto(student)).thenReturn(studentDTO);
         StudentDTO createdStudent = studentServiceImpl.createStudent(studentDTO);
 
-        assertEquals(studentDTO.getStudentId(), createdStudent.getStudentId());
+        assertEquals(studentDTO.getId(), createdStudent.getId());
         assertEquals(studentDTO.getName(), createdStudent.getName());
 
     }
@@ -137,18 +137,18 @@ class StudentServiceImplTest {
         UUID STUDENT_ID = UUID.randomUUID();
         String studentName = "Student1";
         StudentDTO studentDTO = StudentDTO.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName + "New")
                 .build();
 
         Student studentExisting = Student.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName)
                 .build();
 
 
         Student studentUpdated = Student.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName + "New")
                 .build();
 
@@ -159,7 +159,7 @@ class StudentServiceImplTest {
         when(studentMapper.studentToStudentDto(studentUpdated)).thenReturn(studentDTO);
         Optional<StudentDTO> updatedStudent = studentServiceImpl.updateStudentById(STUDENT_ID, studentDTO);
 
-        assertEquals(studentDTO.getStudentId(), updatedStudent.get().getStudentId());
+        assertEquals(studentDTO.getId(), updatedStudent.get().getId());
         assertEquals(studentDTO.getName(), updatedStudent.get().getName());
 
     }
@@ -171,12 +171,12 @@ class StudentServiceImplTest {
         UUID STUDENT_ID = UUID.randomUUID();
         String studentName = "Student1";
         StudentDTO studentDTO = StudentDTO.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName + "New")
                 .build();
 
         Student studentUpdated = Student.builder()
-                .studentId(STUDENT_ID)
+                .id(STUDENT_ID)
                 .name(studentName + "New")
                 .build();
 

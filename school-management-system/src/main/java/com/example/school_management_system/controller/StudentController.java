@@ -41,11 +41,9 @@ public class StudentController {
         StudentDTO savedStudent = studentService.createStudent(studentDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", STUDENT_PATH + "/" + savedStudent.getStudentId().toString());
+        headers.add("Location", STUDENT_PATH + "/" + savedStudent.getId().toString());
 
-        return ResponseEntity
-                .created(URI.create(Objects.requireNonNull(headers.getFirst("Location"))))
-                .body(savedStudent);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping(STUDENT_PATH_ID)

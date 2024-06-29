@@ -1,12 +1,13 @@
 package com.example.school_management_system.entity;
 
 import com.example.school_management_system.enums.GenderTypes;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Data
@@ -15,7 +16,19 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@MappedSuperclass
 public class Person {
+
+    /*
+    * @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )*/
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotNull
     @NotBlank
@@ -30,6 +43,8 @@ public class Person {
     private String email;
     private String password;
     private String gender;
+
+    @Embedded
     private Address address;
     private String phoneNo;
 }

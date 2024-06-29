@@ -1,11 +1,13 @@
 package com.example.school_management_system.services;
 
 import com.example.school_management_system.dto.StudentDTO;
+import com.example.school_management_system.mappers.AddressMapper;
 import com.example.school_management_system.mappers.StudentMapper;
 import com.example.school_management_system.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +19,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final AddressMapper addressMapper;
 
     @Override
     public StudentDTO createStudent(StudentDTO dto) {
@@ -46,10 +49,10 @@ public class StudentServiceImpl implements StudentService {
 
         studentRepository.findById(id).ifPresentOrElse(studentFound -> {
             studentFound.setName(dto.getName());
-            studentFound.setDob(dto.getDob());
+            studentFound.setDob(LocalDate.parse(dto.getDob()));
             studentFound.setEmail(dto.getEmail());
             studentFound.setGender(dto.getGender());
-            studentFound.setAddress(dto.getAddress());
+            studentFound.setAddress(addressMapper.addressDtoToAddress(dto.getAddress()));
             studentFound.setParentName(dto.getParentName());
             studentFound.setPhoneNo(dto.getPhoneNo());
             atomicReference.set(Optional.of(

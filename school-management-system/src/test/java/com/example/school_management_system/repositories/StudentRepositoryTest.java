@@ -31,7 +31,7 @@ class StudentRepositoryTest {
                         .build());
 
         assertThat(savedStudent).isNotNull();
-        assertThat(savedStudent.getStudentId()).isNotNull();
+        assertThat(savedStudent.getId()).isNotNull();
         assertThat(savedStudent.getName()).isEqualTo(STUDENT_NAME);
     }
 

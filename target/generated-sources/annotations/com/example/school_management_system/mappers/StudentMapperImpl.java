@@ -1,13 +1,17 @@
 package com.example.school_management_system.mappers;
 
+import com.example.school_management_system.dto.AddressDTO;
 import com.example.school_management_system.dto.StudentDTO;
+import com.example.school_management_system.entity.Address;
 import com.example.school_management_system.entity.Student;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-29T19:08:47+0530",
+    date = "2024-06-29T23:06:38+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 @Component
@@ -21,13 +25,16 @@ public class StudentMapperImpl implements StudentMapper {
 
         Student.StudentBuilder<?, ?> student = Student.builder();
 
+        student.id( dto.getId() );
         student.name( dto.getName() );
-        student.dob( dto.getDob() );
+        if ( dto.getDob() != null ) {
+            student.dob( LocalDate.parse( dto.getDob() ) );
+        }
         student.email( dto.getEmail() );
+        student.password( dto.getPassword() );
         student.gender( dto.getGender() );
-        student.address( dto.getAddress() );
+        student.address( addressDTOToAddress( dto.getAddress() ) );
         student.phoneNo( dto.getPhoneNo() );
-        student.studentId( dto.getStudentId() );
         student.parentName( dto.getParentName() );
 
         return student.build();
@@ -41,15 +48,48 @@ public class StudentMapperImpl implements StudentMapper {
 
         StudentDTO.StudentDTOBuilder studentDTO = StudentDTO.builder();
 
-        studentDTO.studentId( entity.getStudentId() );
+        studentDTO.id( entity.getId() );
         studentDTO.parentName( entity.getParentName() );
         studentDTO.name( entity.getName() );
-        studentDTO.dob( entity.getDob() );
+        if ( entity.getDob() != null ) {
+            studentDTO.dob( DateTimeFormatter.ISO_LOCAL_DATE.format( entity.getDob() ) );
+        }
         studentDTO.email( entity.getEmail() );
         studentDTO.gender( entity.getGender() );
-        studentDTO.address( entity.getAddress() );
+        studentDTO.address( addressToAddressDTO( entity.getAddress() ) );
         studentDTO.phoneNo( entity.getPhoneNo() );
+        studentDTO.password( entity.getPassword() );
 
         return studentDTO.build();
+    }
+
+    protected Address addressDTOToAddress(AddressDTO addressDTO) {
+        if ( addressDTO == null ) {
+            return null;
+        }
+
+        Address.AddressBuilder address = Address.builder();
+
+        address.houseNo( addressDTO.getHouseNo() );
+        address.streetName( addressDTO.getStreetName() );
+        address.city( addressDTO.getCity() );
+        address.zipcode( addressDTO.getZipcode() );
+
+        return address.build();
+    }
+
+    protected AddressDTO addressToAddressDTO(Address address) {
+        if ( address == null ) {
+            return null;
+        }
+
+        AddressDTO.AddressDTOBuilder addressDTO = AddressDTO.builder();
+
+        addressDTO.houseNo( address.getHouseNo() );
+        addressDTO.streetName( address.getStreetName() );
+        addressDTO.city( address.getCity() );
+        addressDTO.zipcode( address.getZipcode() );
+
+        return addressDTO.build();
     }
 }

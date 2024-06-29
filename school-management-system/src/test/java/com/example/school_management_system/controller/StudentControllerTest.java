@@ -2,6 +2,7 @@ package com.example.school_management_system.controller;
 
 import com.example.school_management_system.dto.StudentDTO;
 import com.example.school_management_system.entity.Student;
+import com.example.school_management_system.mappers.AddressMapper;
 import com.example.school_management_system.mappers.StudentMapper;
 import com.example.school_management_system.repositories.StudentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +40,9 @@ class StudentControllerTest {
     StudentMapper studentMapper;
 
     @Autowired
+    AddressMapper addressMapper;
+
+    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
@@ -71,10 +75,10 @@ class StudentControllerTest {
     @Test
     void testStudentGetById() {
         Student student = studentRepository.findAll().getFirst();
-        StudentDTO dto = studentController.getStudentById(student.getStudentId());
+        StudentDTO dto = studentController.getStudentById(student.getId());
 
         assertThat(dto).isNotNull();
-        assertThat(dto.getStudentId()).isEqualTo(student.getStudentId());
+        assertThat(dto.getId()).isEqualTo(student.getId());
     }
 
     @Test
@@ -91,6 +95,7 @@ class StudentControllerTest {
 
         StudentDTO studentDTO = StudentDTO.builder()
                 .name("StudentOne")
+                .dob("2015-06-23")
                 .build();
         ResponseEntity<StudentDTO> responseEntity = studentController.createStudent(studentDTO);
 
@@ -102,7 +107,6 @@ class StudentControllerTest {
 
         Student student = studentRepository.findById(savedUUID).get();
         assertThat(student).isNotNull();
-        assertThat(student.getStudentId()).isEqualTo(Objects.requireNonNull(responseEntity.getBody()).getStudentId());
     }
 
     @Rollback
@@ -114,11 +118,11 @@ class StudentControllerTest {
         final String NAME = "UPDATED_STUDENT";
         studentDTO.setName(NAME);
 
-        ResponseEntity responseEntity = studentController.updateStudentById(studentDTO.getStudentId(), studentDTO);
+        ResponseEntity responseEntity = studentController.updateStudentById(studentDTO.getId(), studentDTO);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        Student updatedStudent = studentRepository.findById(studentDTO.getStudentId()).get();
+        Student updatedStudent = studentRepository.findById(studentDTO.getId()).get();
         assertThat(updatedStudent.getName()).isEqualTo(NAME);
     }
 
@@ -126,10 +130,10 @@ class StudentControllerTest {
     void testUpdateStudentNotFound() {
         Student student = studentRepository.findAll().getFirst();
         StudentDTO studentDTO = studentMapper.studentToStudentDto(student);
-        studentDTO.setStudentId(UUID.randomUUID());
+        studentDTO.setId(UUID.randomUUID());
 
         assertThrows(NotFoundException.class, () -> {
-            studentController.updateStudentById(studentDTO.getStudentId(), studentDTO);
+            studentController.updateStudentById(studentDTO.getId(), studentDTO);
         });
     }
 
@@ -139,7 +143,7 @@ class StudentControllerTest {
     void testDeleteStudentById() {
         long count = studentRepository.count();
         Student student = studentRepository.findAll().getFirst();
-        ResponseEntity responseEntity = studentController.deleteStudentById(student.getStudentId());
+        ResponseEntity responseEntity = studentController.deleteStudentById(student.getId());
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(studentRepository.count()).isEqualTo(count - 1);
