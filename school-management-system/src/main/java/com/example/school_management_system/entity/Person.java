@@ -1,6 +1,7 @@
 package com.example.school_management_system.entity;
 
 import com.example.school_management_system.enums.GenderTypes;
+import com.example.school_management_system.interfaces.Authentication;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-public class Person {
+public class Person implements Authentication {
 
     /*
     * @GeneratedValue(generator = "UUID")
@@ -47,4 +48,14 @@ public class Person {
     @Embedded
     private Address address;
     private String phoneNo;
+
+    @Override
+    public void login() {
+
+    }
+
+    @Override
+    public void logout() {
+
+    }
 }
