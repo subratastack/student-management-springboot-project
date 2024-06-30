@@ -1,6 +1,7 @@
 package com.example.school_management_system.services;
 
 import com.example.school_management_system.dto.ClassroomDTO;
+import com.example.school_management_system.entity.Classroom;
 import com.example.school_management_system.mappers.ClassroomMapper;
 import com.example.school_management_system.repositories.ClassroomRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,10 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public ClassroomDTO createClassroom(ClassroomDTO classroomDTO) {
-        return null;
+        Classroom savedClassroom = classroomRepository.save(
+                classroomMapper.classroomDtoToClassroom(classroomDTO)
+        );
+
+        return classroomMapper.classroomToClassroomDto(savedClassroom);
     }
 }

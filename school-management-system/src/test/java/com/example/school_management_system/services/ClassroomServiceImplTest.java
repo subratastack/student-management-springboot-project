@@ -37,13 +37,13 @@ class ClassroomServiceImplTest {
     @MockBean
     private ClassroomMapper classroomMapper;
 
+    private List<StudentDTO> mockStudents;
+    private List<StudentDTO> mockStudents2;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
 
-    @Test
-    void testGetAllClassroom() {
         StudentDTO studentDto1 = StudentDTO.builder()
                 .id(UUID.randomUUID())
                 .name("StudentTest1")
@@ -57,13 +57,17 @@ class ClassroomServiceImplTest {
                 .name("StudentTest3")
                 .build();
 
-        List<StudentDTO> mockStudents = Arrays.asList(
+        mockStudents = Arrays.asList(
                 studentDto1,
                 studentDto2
         );
-        List<StudentDTO> mockStudents2 = Collections.singletonList(
+        mockStudents2 = Collections.singletonList(
                 studentDto3
         );
+    }
+
+    @Test
+    void testGetAllClassroom() {
 
         ClassroomDTO classroomDTO1 = ClassroomDTO.builder()
                 .classroomId(UUID.randomUUID())
@@ -103,5 +107,36 @@ class ClassroomServiceImplTest {
         List<ClassroomDTO> results = classroomService.listOfClassrooms();
 
         assertEquals(results.size(), 0);
+    }
+
+    @Test
+    void testCreateClassroom() {
+
+        final UUID CLASSROOM_ID = UUID.randomUUID();
+        final Integer CLASSROOM = 1;
+        final Character CLASSROOM_SECTION = 'A';
+
+        ClassroomDTO classroomDTO = ClassroomDTO.builder()
+                .classroomId(CLASSROOM_ID)
+                .classRoom(CLASSROOM)
+                .section(CLASSROOM_SECTION)
+                .build();
+
+        Classroom classroom = Classroom.builder()
+                .classroomId(CLASSROOM_ID)
+                .classRoom(CLASSROOM)
+                .section(CLASSROOM_SECTION)
+                .build();
+
+
+        when(classroomRepository.save(classroomMapper.classroomDtoToClassroom(classroomDTO)))
+                .thenReturn(classroom);
+        when(classroomMapper.classroomToClassroomDto(classroom)).thenReturn(classroomDTO);
+
+        ClassroomDTO savedClassroomDto = classroomService.createClassroom(classroomDTO);
+
+        assertEquals(classroomDTO.getClassroomId(), savedClassroomDto.getClassroomId());
+        assertEquals(classroomDTO.getClassRoom(), savedClassroomDto.getClassRoom());
+
     }
 }
