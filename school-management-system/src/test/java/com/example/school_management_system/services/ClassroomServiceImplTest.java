@@ -15,13 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -138,5 +136,38 @@ class ClassroomServiceImplTest {
         assertEquals(classroomDTO.getClassroomId(), savedClassroomDto.getClassroomId());
         assertEquals(classroomDTO.getClassRoom(), savedClassroomDto.getClassRoom());
 
+    }
+
+    @Test
+    void testGetClassroomById() {
+
+        final UUID CLASSROOM_ID = UUID.randomUUID();
+        ClassroomDTO classroomDTO = ClassroomDTO.builder()
+                .classroomId(CLASSROOM_ID)
+                .classRoom(1)
+                .section('A')
+                .build();
+
+        when(classroomRepository.findById(CLASSROOM_ID)).thenReturn(Optional.of(new Classroom()));
+        when(classroomMapper.classroomToClassroomDto(Mockito.any(Classroom.class)))
+                .thenReturn(classroomDTO);
+
+        Optional<ClassroomDTO> existingClassroom = classroomService.getClassroomById(CLASSROOM_ID);
+
+        assertEquals(existingClassroom.get(), classroomDTO);
+        assertThat(existingClassroom.get().getClassroomId()).isEqualTo(classroomDTO.getClassroomId());
+    }
+
+    @Test
+    void testGetClassroomByIdNull() {
+        final UUID CLASSROOM_ID = UUID.randomUUID();
+
+        when(classroomRepository.findById(CLASSROOM_ID)).thenReturn(Optional.empty());
+        when(classroomMapper.classroomToClassroomDto(Mockito.any(Classroom.class)))
+                .thenReturn(null);
+
+        Optional<ClassroomDTO> classroomDTO = classroomService.getClassroomById(CLASSROOM_ID);
+
+        assertTrue(classroomDTO.isEmpty());
     }
 }

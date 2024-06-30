@@ -49,13 +49,13 @@ public class StudentServiceImpl implements StudentService {
 
         studentRepository.findById(id).ifPresentOrElse(studentFound -> {
             studentFound.setName(dto.getName());
-            studentFound.setDob(LocalDate.parse(dto.getDob()));
+            studentFound.setDob(dto.getDob() != null ? LocalDate.parse(dto.getDob()) : null);
             studentFound.setEmail(dto.getEmail());
             studentFound.setGender(dto.getGender());
             studentFound.setAddress(addressMapper.addressDtoToAddress(dto.getAddress()));
             studentFound.setParentName(dto.getParentName());
             studentFound.setPhoneNo(dto.getPhoneNo());
-            atomicReference.set(Optional.of(
+            atomicReference.set(Optional.ofNullable(
                     studentMapper.studentToStudentDto(studentRepository.save(studentFound))
             ));
         }, () -> {

@@ -139,6 +139,7 @@ class StudentServiceImplTest {
         StudentDTO studentDTO = StudentDTO.builder()
                 .id(STUDENT_ID)
                 .name(studentName + "New")
+                .dob("2015-11-25")
                 .build();
 
         Student studentExisting = Student.builder()
@@ -153,12 +154,13 @@ class StudentServiceImplTest {
                 .build();
 
         when(studentRepository.findById(STUDENT_ID)).thenReturn(Optional.of(studentExisting));
-        when(studentRepository.save(studentUpdated)).thenReturn(studentUpdated);
+        when(studentRepository.save(any())).thenReturn(studentUpdated);
 
         when(studentMapper.studentDtoToStudent(studentDTO)).thenReturn(studentUpdated);
         when(studentMapper.studentToStudentDto(studentUpdated)).thenReturn(studentDTO);
         Optional<StudentDTO> updatedStudent = studentServiceImpl.updateStudentById(STUDENT_ID, studentDTO);
 
+        assertTrue(updatedStudent.isPresent());
         assertEquals(studentDTO.getId(), updatedStudent.get().getId());
         assertEquals(studentDTO.getName(), updatedStudent.get().getName());
 
