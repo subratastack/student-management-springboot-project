@@ -18,7 +18,10 @@ public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID classroomId;
+
+    @Column(name = "classroom_number")
     private Integer classRoom;
+    @Column(name = "classroom_section")
     private Character section;
 
     @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL)

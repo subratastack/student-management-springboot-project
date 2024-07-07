@@ -30,6 +30,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Optional<StudentDTO> getStudentById(UUID id) {
+        System.out.println(id);
         return Optional.ofNullable(studentMapper.studentToStudentDto(
            studentRepository.findById(id).orElse(null)
         ));

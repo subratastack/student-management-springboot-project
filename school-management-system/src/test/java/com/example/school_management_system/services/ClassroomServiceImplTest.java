@@ -6,7 +6,9 @@ import com.example.school_management_system.entity.Classroom;
 import com.example.school_management_system.mappers.ClassroomMapper;
 import com.example.school_management_system.repositories.ClassroomRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.Random.class)
 class ClassroomServiceImplTest {
 
     @Autowired
